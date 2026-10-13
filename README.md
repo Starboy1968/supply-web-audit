@@ -43,12 +43,14 @@ Total time: 2–4 weeks per audit (depends on data availability).
 ```
 .
 ├── README.md                 # This file
-├── AGENTS.md                 # Framework architecture (ICM: folders, hierarchy, files)
-├── CONTEXT.md                # Pipeline flowchart and stage contracts
+├── AGENTS.md                 # Entry file for any agent (ICM: folders, hierarchy, files)
+├── CONTEXT.md                # Pipeline table and stage contracts
+├── CONTRIBUTING.md           # How to extend without breaking ICM
+├── LICENSE                   # MIT
 ├── setup/
 │   └── questionnaire.md      # One-time client configuration
-├── stages/
-│   ├── 01_scope/
+├── stages/                   # The pipeline, in execution order
+│   ├── 01_scope/             # Each stage: CONTEXT.md + output/ (+ references/)
 │   ├── 02_players-and-ai/
 │   ├── 03_link-ledger/
 │   ├── 04_money-map/
@@ -56,14 +58,16 @@ Total time: 2–4 weeks per audit (depends on data availability).
 │   ├── 06_behavior/
 │   ├── 07_test-moves/
 │   └── 08_report/
-│       └── output/           # Stage artifacts (only counts if output/ exists)
 ├── _shared/                  # Factory (stable every run)
-│   ├── client-profile.md     # Client answers (one per audit)
+│   ├── client-profile.md     # Blank until you run setup
 │   ├── principles.md         # Framework principles
 │   ├── layers-and-tiers.md   # Layer definitions + tier rules
-│   ├── payoffs.md            # Who wins/loses at each layer
+│   ├── payoffs-and-drivers.md # What players want and what moves them
 │   └── evidence-labels.md    # How to label claims (Established/Author/Gap)
-└── _templates/               # Blank starters (copy, never edit directly)
+├── _templates/               # Blank starters (copy, never edit directly)
+├── docs/                     # Full framework reference + worked example
+├── examples/apex/            # Filled demo profile and scope (fictional client)
+└── client-records/           # Drop client files here (contents gitignored)
 ```
 
 ## Evidence Labeling
@@ -82,19 +86,21 @@ This signals confidence to readers (board, counsel, acquirer).
 - **Behavior layer:** Vendor access logs, patch discipline, incident response playbook, key person redundancy
 - **Money layer:** Insurance coverage, recovery cost estimates, SLA liability, concentration by revenue
 
-See `docs/AUDIT_EXAMPLE.md` for a worked demo (Apex Digital Services).
+See `docs/AUDIT_EXAMPLE.md` for a worked demo, and `examples/apex/` for its filled profile and scope (Apex Digital Services, fictional).
 
 ## Using This Framework
 
 ### For your own audit
-1. Clone or copy this repo
-2. Edit `setup/questionnaire.md` with your client's details
-3. Run answers into `_shared/client-profile.md`
-4. Start Stage 01 (read `stages/01_scope/CONTEXT.md`)
-5. Follow the pipeline
+1. Clone or copy this repo, one copy per client
+2. Open it in any agent (Claude Code, Codex, Gemini CLI) and say: "Read AGENTS.md and run setup"
+3. Answer `setup/questionnaire.md`; the agent writes `_shared/client-profile.md`
+4. Say: "Run stage 01." Read the output, confirm, then move to the next stage
+5. Repeat through `08_report`
+
+Put client files in `client-records/`. They stay out of git.
 
 ### For GitHub publishing
-All outputs are markdown. Push `_shared/` + `stages/*/output/` to a private or public repo. Each stage's output stands alone.
+Keep client copies private. Publish only this framework, with `examples/` as the demo.
 
 ## Contributing
 
@@ -106,7 +112,7 @@ If you test this on a new risk domain (supply chain, geopolitical, operational),
 
 ## License
 
-This framework is author's construction. Use freely for audits; attribute if you publish modifications.
+MIT. See `LICENSE`. Contributions: see `CONTRIBUTING.md`.
 
 ---
 

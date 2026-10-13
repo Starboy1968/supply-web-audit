@@ -1,9 +1,11 @@
 # Client data and sensitive records (keep out of version control)
 *.csv
+!_templates/*.csv
 *.xlsx
 *.xls
 *.pdf
-client-records/
+client-records/*
+!client-records/.gitkeep
 bank-statements/
 audit-logs/
 incident-reports/

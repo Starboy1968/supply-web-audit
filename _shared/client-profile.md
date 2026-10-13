@@ -1,37 +1,28 @@
 ---
 type: factory
-status: configured
-date: 2026-10-13
-domain: cyber-risk
+status: unconfigured
 ---
 
 # Client Profile
 
-**Client:** Apex Digital Services (fictional, for demo)
+Fill this in from `setup/questionnaire.md`, once per client copy. See `examples/apex/client-profile.md` for a filled example.
 
-**What they do:** Mid-market SaaS platform for financial reporting automation. B2B, ~150 employees, $8M ARR. Hosted on AWS, integrates with 40+ accounting and banking partners.
+**Client:**
 
-**Decision this audit supports:** Board wants cyber risk visibility in the supply web before acquisition talks. Due: 2026-11-15.
+**What they sell or do:**
 
-**Beneficiary:** CEO, board, and M&A counsel.
+**Decision this audit supports (and due date):**
 
-**Layers that matter most:** Technology (cloud, integrations), Rules (data residency, breach notification), Behavior (vendor access, incident response), Money (insurance, recovery costs).
+**Beneficiary:**
 
-**AI tools the client uses:**
-- Cloud security posture monitoring (automated)
-- Threat intel feeds (automated, reviewed weekly by CISO)
-- No generative AI in customer-facing code.
+**Layers that matter most:**
 
-**Records available:** 
-- AWS cost and security logs (18 months)
-- Vendor contracts (40 integrations documented)
-- Insurance policies (E&O, cyber liability)
-- Two periods of payment history (current FY + prior)
-- Incident log (past 2 years, 3 events)
+**AI tools the client uses (and who approves output):**
 
-**Risk appetite:** Cannot tolerate >2 hours of platform downtime per month. Cannot accept data breach affecting customer data. Regulatory breach (GDPR, SOX) is existential.
+**Records available:**
 
-**Legal review:** Scoring applies to vendors/partners only, not individuals. Completed.
+**Risk appetite:**
 
-**Other readers:** M&A due diligence team (external counsel + acquirer's tech team). Must find: concentration risk, incident history, regulatory exposure without asking.
+**Legal review:** Score firms only until legal review for named individuals is done.
 
+**Other readers (what they must find without asking):**
