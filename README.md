@@ -64,6 +64,21 @@ Each stage reads the output of the stages before it. The hexagons are the human 
 
 **Key principle:** Nothing moves to the next stage until a person has read and approved the output of the last one.
 
+## Intake Form (for auditors)
+
+`tools/intake-form.html` is a single-file form. Double-click it to open in any browser. No install, no server, nothing uploaded.
+
+It covers the client profile, the players, AI uses, and the link ledger, with the same fields the pipeline reads. Export buttons write files in the exact formats the stages expect:
+
+| Section | Exports | Save to |
+|---|---|---|
+| Client profile | `client-profile.md` | `_shared/` |
+| Players | `roster.md` | `stages/02_players-and-ai/output/` |
+| AI uses | `ai-uses.md` | `stages/02_players-and-ai/output/` |
+| Link ledger | `ledger.csv` | `stages/03_link-ledger/output/` |
+
+Rows start labeled `Gap`; change a row to Established or Author's construction only when the record supports it. Progress autosaves in the browser, and **Save session** writes a `.json` you can reload later or hand to a colleague. Exported drafts still go through the human gate: the agent or auditor reads them before the next stage runs.
+
 ## Using It With Different Agents
 
 Every agent starts from one entry file, `AGENTS.md`. `CLAUDE.md` and `GEMINI.md` are one-line pointers to it, so each tool's native entry file lands in the same place.
@@ -162,6 +177,7 @@ stages 01 to 03 on Apex so I can see the shape of each output.
 │   ├── payoffs-and-drivers.md # What players want and what moves them
 │   └── evidence-labels.md    # How to label claims (Established/Author/Gap)
 ├── _templates/               # Blank starters (copy, never edit directly)
+├── tools/intake-form.html    # Offline form that exports profile, roster, AI uses, ledger
 ├── docs/                     # Full framework reference + worked example
 ├── examples/apex/            # Filled demo profile and scope (fictional client)
 └── client-records/           # Drop client files here (contents gitignored)

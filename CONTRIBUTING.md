@@ -17,6 +17,10 @@ This repo is an ICM workspace: folders carry sequencing, hierarchy carries conte
 2. Add the stage to the table in the root `CONTEXT.md`.
 3. Update the stage list in `README.md`.
 
+## Keeping the intake form in sync
+
+`tools/intake-form.html` mirrors `setup/questionnaire.md`, `_templates/`, and `stages/03_link-ledger/references/ledger-fields.md`. If you change a ledger field, a questionnaire question, or a template, change the matching column or field in the form's `COLS` table and export functions in the same PR. The CSV header it exports must equal `_templates/ledger-header.csv`.
+
 ## Adding a layer, tier, or evidence rule
 
 1. Edit `_shared/layers-and-tiers.md` or `_shared/evidence-labels.md`.

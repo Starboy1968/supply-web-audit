@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supply Web Audit Intake</title>
+<style>
+:root{--bg:#f7f7f5;--card:#fff;--ink:#1c1c1a;--mute:#6b6b66;--line:#dcdcd6;--accent:#1f5f4a;--accent-ink:#fff;--warn:#8a5a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--card:#1e1e1c;--ink:#ecece8;--mute:#9a9a94;--line:#34342f;--accent:#5fb596;--accent-ink:#102a21;--warn:#e0b050}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 80px}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:17px;margin:0 0 4px}
+p.sub{color:var(--mute);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:16px 0}
+.hint{color:var(--mute);font-size:13px;margin:0 0 12px}
+label{display:block;font-weight:600;font-size:13px;margin:12px 0 4px}
+input[type=text],input[type=date],textarea,select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:64px;resize:vertical}
+.checks{display:flex;flex-wrap:wrap;gap:6px 16px}
+.checks label{font-weight:400;margin:0;display:flex;gap:6px;align-items:center}
+button{font:inherit;padding:8px 14px;border-radius:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.small{padding:4px 10px;font-size:13px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;min-width:100%}
+th,td{padding:4px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-align:left;padding:8px 6px;color:var(--mute);white-space:nowrap;background:var(--bg)}
+td input,td select,td textarea{min-width:120px;padding:6px 8px;font-size:14px}
+td.narrow input,td.narrow select{min-width:80px}
+td textarea{min-height:34px}
+.bar{position:sticky;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center}
+.note{color:var(--warn);font-size:13px}
+#status{color:var(--mute);font-size:13px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Supply Web Audit Intake</h1>
+  <p class="sub">Fills the same fields the pipeline reads. Everything stays in this browser tab; nothing is uploaded. Export, then save each file into the folder named in its button.</p>
+
+  <section class="card" id="profile">
+    <h2>1. Client profile</h2>
+    <p class="hint">From <code>setup/questionnaire.md</code>. Exports to <code>_shared/client-profile.md</code>.</p>
+    <label for="p_client">Client name and what they sell or do</label>
+    <textarea id="p_client" data-p="client"></textarea>
+    <label for="p_decision">Decision this audit supports</label>
+    <textarea id="p_decision" data-p="decision"></textarea>
+    <label for="p_due">Due date</label>
+    <input type="date" id="p_due" data-p="due">
+    <label for="p_beneficiary">Beneficiary of the audit</label>
+    <input type="text" id="p_beneficiary" data-p="beneficiary">
+    <label>Layers that matter most</label>
+    <div class="checks" id="layers"></div>
+    <label for="p_ai">AI tools the client uses, and who approves their output</label>
+    <textarea id="p_ai" data-p="ai"></textarea>
+    <label for="p_records">Records the client can give (bank, loans, AR/AP aging, contracts, two periods of payment history)</label>
+    <textarea id="p_records" data-p="records"></textarea>
+    <label for="p_risk">Risk appetite: what loss or delay would the owner not accept?</label>
+    <textarea id="p_risk" data-p="risk"></textarea>
+    <label for="p_legal">Is legal review done for scoring any named person's behavior?</label>
+    <select id="p_legal" data-p="legal">
+      <option value="No: score firms only until it is">No: score firms only until it is</option>
+      <option value="Yes: complete">Yes: complete</option>
+    </select>
+    <label for="p_readers">Who else reads the report, and what must they find without asking?</label>
+    <textarea id="p_readers" data-p="readers"></textarea>
+    <div class="row"><button class="primary" data-export="profile">Export client-profile.md</button><span class="hint" style="margin:0">save to <code>_shared/</code></span></div>
+  </section>
+
+  <section class="card">
+    <h2>2. Players</h2>
+    <p class="hint">Admission test: add a player only if removing it changes another player's payoffs or options. Exports to <code>roster.md</code>.</p>
+    <div class="tablewrap"><table id="t_players"></table></div>
+    <div class="row"><button data-add="players">+ Add player</button><button class="primary" data-export="roster">Export roster.md</button><span class="hint" style="margin:0">save to <code>stages/02_players-and-ai/output/</code></span></div>
+  </section>
+
+  <section class="card">
+    <h2>3. AI uses</h2>
+    <p class="hint">Every AI use in the web, the client's and the vendors'. Exports to <code>ai-uses.md</code>.</p>
+    <div class="tablewrap"><table id="t_ai"></table></div>
+    <div class="row"><button data-add="ai">+ Add AI use</button><button class="primary" data-export="ai">Export ai-uses.md</button><span class="hint" style="margin:0">save to <code>stages/02_players-and-ai/output/</code></span></div>
+  </section>
+
+  <section class="card">
+    <h2>4. Link ledger</h2>
+    <p class="hint">One row per link. Leverage sits with whoever can leave more cheaply. Tier is set per link, not per player. Exports <code>ledger.csv</code> with the exact header in <code>_templates/ledger-header.csv</code>.</p>
+    <div class="tablewrap"><table id="t_ledger"></table></div>
+    <div class="row"><button data-add="ledger">+ Add link</button><button class="primary" data-export="ledger">Export ledger.csv</button><span class="hint" style="margin:0">save to <code>stages/03_link-ledger/output/</code></span></div>
+    <p class="note">ledger.csv is gitignored on purpose. Do not commit client data.</p>
+  </section>
+</main>
+
+<div class="bar">
+  <button class="primary" data-export="all">Export everything</button>
+  <button data-export="json">Save session (.json)</button>
+  <button id="loadBtn">Load session</button>
+  <input type="file" id="loadFile" accept=".json" hidden>
+  <button id="clearBtn">Clear all</button>
+  <span id="status" role="status"></span>
+</div>
+
+<script>
+const LAYERS = ["money","physical","rules","narrative","technology","behavior","ecology"];
+const LABELS = ["Gap","Established","Author's construction"]; // Gap first: a new row claims nothing until upgraded
+const TIERS = ["","top","middle","bottom"];
+const ROLES = ["player","chokepoint holder","insurer","trust gatekeeper","platform","information shaper","security force","shadow player","foreign state","collective","fixed-asset owner","absent entrant"];
+const AI_ROLES = ["tool","player","infrastructure","shock generator"];
+
+// column defs: [key, label, type, options, cssClass]
+const COLS = {
+  players: [["name","Name","text"],["role","Role / type","select",ROLES],["admission_test","Admission test: what changes for another player if removed","area"],["payoffs","Payoffs served","text"],["records","Records seen","text"],["evidence","Evidence","select",LABELS]],
+  ai: [["name","AI use","text"],["role","Role","select",AI_ROLES],["autonomy","Autonomy level","text"],["mode","Use mode","text"],["owner","Who approves output","text"],["evidence","Evidence","select",LABELS]],
+  ledger: [["link_id","link_id","text","","narrow"],["from","from","text"],["to","to","text"],["what_flows","what_flows","text"],["money_direction","money_direction","text"],["size_or_share","size_or_share","text"],["terms_days","terms_days","text","","narrow"],["actual_days","actual_days","text","","narrow"],["walk_away_cost_from","walk_away_cost_from","text"],["walk_away_cost_to","walk_away_cost_to","text"],["tier","tier","select",TIERS,"narrow"],["alternatives","alternatives","text"],["shared_dependency","shared_dependency","text"],["obligations_carried","obligations_carried","text"],["owner_decision_right","owner_decision_right","text"],["evidence","evidence","select",LABELS]]
+};
+const TABLES = {players:"t_players",ai:"t_ai",ledger:"t_ledger"};
+const KEY = "swa-intake-v1";
+
+const blank = () => ({profile:{layers:[]},players:[],ai:[],ledger:[]});
+let state = blank();
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function setStatus(m){ $("#status").textContent = m; }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); setStatus("Saved in this browser " + new Date().toLocaleTimeString()); }catch(e){ setStatus("Autosave unavailable; use Save session."); } }
+function load(){ try{ const s = localStorage.getItem(KEY); if(s) state = Object.assign(blank(), JSON.parse(s)); }catch(e){} }
+
+function renderLayers(){
+  $("#layers").innerHTML = LAYERS.map(l => `<label><input type="checkbox" data-layer="${l}" ${state.profile.layers?.includes(l)?"checked":""}> ${l}</label>`).join("");
+}
+function renderProfile(){
+  document.querySelectorAll("[data-p]").forEach(el => { el.value = state.profile[el.dataset.p] ?? (el.tagName==="SELECT" ? el.options[0].value : ""); });
+  renderLayers();
+}
+function cell(tbl,i,c,v){
+  const [k,,type,opts,cls] = c;
+  const attr = `data-t="${tbl}" data-i="${i}" data-k="${k}" aria-label="${esc(c[1])} row ${i+1}"`;
+  let inner;
+  if(type==="select") inner = `<select ${attr}>${opts.map(o=>`<option ${o===v?"selected":""}>${esc(o)}</option>`).join("")}</select>`;
+  else if(type==="area") inner = `<textarea ${attr}>${esc(v)}</textarea>`;
+  else inner = `<input type="text" ${attr} value="${esc(v)}">`;
+  return `<td class="${cls||""}">${inner}</td>`;
+}
+function renderTable(tbl){
+  const cols = COLS[tbl];
+  const head = `<tr>${cols.map(c=>`<th>${esc(c[1])}</th>`).join("")}<th></th></tr>`;
+  const rows = state[tbl].map((r,i)=>`<tr>${cols.map(c=>cell(tbl,i,c,r[c[0]] ?? (c[2]==="select"?c[3][0]:""))).join("")}<td><button class="small" data-del="${tbl}:${i}" aria-label="Delete row ${i+1}">✕</button></td></tr>`).join("");
+  const empty = state[tbl].length ? "" : `<tr><td colspan="${cols.length+1}" class="hint" style="padding:12px">No rows yet.</td></tr>`;
+  $("#"+TABLES[tbl]).innerHTML = head + rows + empty;
+}
+function renderAll(){ renderProfile(); Object.keys(TABLES).forEach(renderTable); }
+
+function newRow(tbl){
+  const r = {}; COLS[tbl].forEach(c => r[c[0]] = c[2]==="select" ? c[3][0] : "");
+  if(tbl==="ledger") r.link_id = "L" + String(state.ledger.length+1).padStart(3,"0");
+  return r;
+}
+
+// ---- exports
+function csvCell(v){ v = String(v ?? ""); return /[",\r\n]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; }
+function md(v){ return String(v ?? "").replace(/\r?\n/g," ").trim(); }
+function today(){ return new Date().toISOString().slice(0,10); }
+
+function exportProfile(){
+  const p = state.profile, g = k => md(p[k]);
+  return `---\ntype: factory\nstatus: configured\ndate: ${today()}\n---\n\n# Client Profile\n\n**Client:** ${g("client")}\n\n**Decision this audit supports:** ${g("decision")}${p.due?" Due: "+p.due+".":""}\n\n**Beneficiary:** ${g("beneficiary")}\n\n**Layers that matter most:** ${(p.layers||[]).join(", ")}\n\n**AI tools the client uses (and who approves output):** ${g("ai")}\n\n**Records available:** ${g("records")}\n\n**Risk appetite:** ${g("risk")}\n\n**Legal review:** ${g("legal") || "No: score firms only until it is"}\n\n**Other readers (what they must find without asking):** ${g("readers")}\n`;
+}
+function exportRoster(){
+  const cards = state.players.filter(r=>r.name).map(r => `---\ntype: player\nname: ${md(r.name)}\ntier_by_link: {}\nrole: ${md(r.role)}\nadmission_test: ${md(r.admission_test)}\nevidence: ${md(r.evidence)}\n---\n# ${md(r.name)}\nPayoffs served: ${md(r.payoffs)}\nRecords seen: ${md(r.records)}\n`);
+  return `# Roster\n\nDraft from intake form. A person must confirm no player is missing, especially lenders and any AI tool.\n\n` + cards.join("\n");
+}
+function exportAI(){
+  const rows = state.ai.filter(r=>r.name).map(r => `| ${md(r.name)} | ${md(r.role)} | ${md(r.autonomy)} | ${md(r.mode)} | ${md(r.owner)} | ${md(r.evidence)} |`);
+  return `# AI uses\n\nDraft from intake form. The eight questions still need to be run on each use.\n\n| AI use | Role | Autonomy | Use mode | Who approves | Evidence |\n|---|---|---|---|---|---|\n` + rows.join("\n") + "\n";
+}
+function exportLedger(){
+  const keys = COLS.ledger.map(c=>c[0]);
+  return keys.join(",") + "\r\n" + state.ledger.map(r => keys.map(k=>csvCell(r[k])).join(",")).join("\r\n") + "\r\n";
+}
+const FILES = {
+  profile:["client-profile.md",exportProfile,"text/markdown"],
+  roster:["roster.md",exportRoster,"text/markdown"],
+  ai:["ai-uses.md",exportAI,"text/markdown"],
+  ledger:["ledger.csv",exportLedger,"text/csv"],
+  json:["intake-session.json",()=>JSON.stringify(state,null,2),"application/json"]
+};
+function download(name,text,type){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text],{type:type+";charset=utf-8"}));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function doExport(which){
+  const list = which==="all" ? ["profile","roster","ai","ledger"] : [which];
+  list.forEach((k,n) => setTimeout(()=>download(FILES[k][0],FILES[k][1](),FILES[k][2]), n*250));
+  setStatus("Exported " + list.map(k=>FILES[k][0]).join(", "));
+}
+
+// ---- events
+document.addEventListener("input", e => {
+  const t = e.target;
+  if(t.dataset.p){ state.profile[t.dataset.p] = t.value; save(); }
+  else if(t.dataset.t){ state[t.dataset.t][+t.dataset.i][t.dataset.k] = t.value; save(); }
+  else if(t.dataset.layer){
+    const set = new Set(state.profile.layers||[]);
+    t.checked ? set.add(t.dataset.layer) : set.delete(t.dataset.layer);
+    state.profile.layers = LAYERS.filter(l=>set.has(l)); save();
+  }
+});
+document.addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  if(b.dataset.add){ state[b.dataset.add].push(newRow(b.dataset.add)); renderTable(b.dataset.add); save(); }
+  else if(b.dataset.del){ const [t,i] = b.dataset.del.split(":"); state[t].splice(+i,1); renderTable(t); save(); }
+  else if(b.dataset.export){ doExport(b.dataset.export); }
+  else if(b.id==="loadBtn"){ $("#loadFile").click(); }
+  else if(b.id==="clearBtn"){ if(confirm("Clear every field in this form? Export first if you need a copy.")){ state = blank(); renderAll(); save(); } }
+});
+$("#loadFile").addEventListener("change", e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => { try{ state = Object.assign(blank(), JSON.parse(r.result)); renderAll(); save(); setStatus("Session loaded."); }catch(err){ setStatus("That file is not a valid session."); } };
+  r.readAsText(f); e.target.value = "";
+});
+
+load(); renderAll();
+</script>
+</body>
+</html>
