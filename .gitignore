@@ -1,0 +1,30 @@
+# Client data and sensitive records (keep out of version control)
+*.csv
+*.xlsx
+*.xls
+*.pdf
+client-records/
+bank-statements/
+audit-logs/
+incident-reports/
+insurance-policies/
+
+# IDE and system files
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.env
+
+# Workflow/tool artifacts (not framework code)
+stages/*/output/.inprogress
+*.tmp
+.cache/
+
+# But DO commit:
+# - stages/*/output/*.md (audit outputs)
+# - _shared/client-profile.md (client config)
+# - All documentation (README, docs/, AGENTS.md, CONTEXT.md)
+# - Framework reference files
