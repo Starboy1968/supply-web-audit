@@ -40,7 +40,7 @@ td textarea{min-height:34px}
 <body>
 <main>
   <h1>Supply Web Audit Intake</h1>
-  <p class="sub">Fills the same fields the pipeline reads. Everything stays in this browser tab; nothing is uploaded. Export, then save each file into the folder named in its button.</p>
+  <p class="sub">Fills the same fields the pipeline reads. Everything stays in this browser tab; nothing is uploaded. Pick a format at the bottom: Pipeline writes the exact files the stages read (save each into the folder shown). Markdown, plain text, CSV, TSV and JSON are for sharing, spreadsheets, or other tools.</p>
 
   <section class="card" id="profile">
     <h2>1. Client profile</h2>
@@ -68,34 +68,34 @@ td textarea{min-height:34px}
     </select>
     <label for="p_readers">Who else reads the report, and what must they find without asking?</label>
     <textarea id="p_readers" data-p="readers"></textarea>
-    <div class="row"><button class="primary" data-export="profile">Export client-profile.md</button><span class="hint" style="margin:0">save to <code>_shared/</code></span></div>
+    <div class="row"><button class="primary" data-export="profile" data-label="profile">Export</button><button data-copy="profile">Copy</button><span class="hint" style="margin:0">save to <code>_shared/</code></span></div>
   </section>
 
   <section class="card">
     <h2>2. Players</h2>
     <p class="hint">Admission test: add a player only if removing it changes another player's payoffs or options. Exports to <code>roster.md</code>.</p>
     <div class="tablewrap"><table id="t_players"></table></div>
-    <div class="row"><button data-add="players">+ Add player</button><button class="primary" data-export="roster">Export roster.md</button><span class="hint" style="margin:0">save to <code>stages/02_players-and-ai/output/</code></span></div>
+    <div class="row"><button data-add="players">+ Add player</button><button class="primary" data-export="roster" data-label="roster">Export</button><button data-copy="roster">Copy</button><span class="hint" style="margin:0">save to <code>stages/02_players-and-ai/output/</code></span></div>
   </section>
 
   <section class="card">
     <h2>3. AI uses</h2>
     <p class="hint">Every AI use in the web, the client's and the vendors'. Exports to <code>ai-uses.md</code>.</p>
     <div class="tablewrap"><table id="t_ai"></table></div>
-    <div class="row"><button data-add="ai">+ Add AI use</button><button class="primary" data-export="ai">Export ai-uses.md</button><span class="hint" style="margin:0">save to <code>stages/02_players-and-ai/output/</code></span></div>
+    <div class="row"><button data-add="ai">+ Add AI use</button><button class="primary" data-export="ai" data-label="ai">Export</button><button data-copy="ai">Copy</button><span class="hint" style="margin:0">save to <code>stages/02_players-and-ai/output/</code></span></div>
   </section>
 
   <section class="card">
     <h2>4. Link ledger</h2>
     <p class="hint">One row per link. Leverage sits with whoever can leave more cheaply. Tier is set per link, not per player. Exports <code>ledger.csv</code> with the exact header in <code>_templates/ledger-header.csv</code>.</p>
     <div class="tablewrap"><table id="t_ledger"></table></div>
-    <div class="row"><button data-add="ledger">+ Add link</button><button class="primary" data-export="ledger">Export ledger.csv</button><span class="hint" style="margin:0">save to <code>stages/03_link-ledger/output/</code></span></div>
+    <div class="row"><button data-add="ledger">+ Add link</button><button class="primary" data-export="ledger" data-label="ledger">Export</button><button data-copy="ledger">Copy</button><span class="hint" style="margin:0">save to <code>stages/03_link-ledger/output/</code></span></div>
     <p class="note">ledger.csv is gitignored on purpose. Do not commit client data.</p>
   </section>
 </main>
 
 <div class="bar">
-  <button class="primary" data-export="all">Export everything</button>
+  <label for="fmt" style="margin:0;font-weight:400">Format</label><select id="fmt" style="width:auto"><option value="pipeline">Pipeline (md + csv, ready for the stages)</option><option value="md">Markdown</option><option value="txt">Plain text</option><option value="csv">CSV</option><option value="tsv">TSV (paste into a spreadsheet)</option><option value="json">JSON</option></select><button class="primary" data-export="all">Export everything</button>
   <button data-export="json">Save session (.json)</button>
   <button id="loadBtn">Load session</button>
   <input type="file" id="loadFile" accept=".json" hidden>
@@ -194,10 +194,59 @@ function download(name,text,type){
   a.download = name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
+// ---- flexible formats: same data, any container
+const BASE = {profile:"client-profile",roster:"roster",ai:"ai-uses",ledger:"ledger"};
+const PROFILE_FIELDS = [["client","Client"],["decision","Decision"],["due","Due date"],["beneficiary","Beneficiary"],["layers","Layers"],["ai","AI tools"],["records","Records"],["risk","Risk appetite"],["legal","Legal review"],["readers","Other readers"]];
+const FMT = {
+  pipeline:{ext:null,type:null},
+  md:{ext:"md",type:"text/markdown"}, txt:{ext:"txt",type:"text/plain"},
+  csv:{ext:"csv",type:"text/csv"}, tsv:{ext:"tsv",type:"text/tab-separated-values"},
+  json:{ext:"json",type:"application/json"}
+};
+function tableOf(which){
+  if(which==="profile"){
+    const p = state.profile;
+    return {headers:["field","value"], rows:PROFILE_FIELDS.map(([k,l])=>[l, k==="layers" ? (p.layers||[]).join("; ") : (p[k] || (k==="legal" ? "No: score firms only until it is" : ""))])};
+  }
+  const key = which==="roster" ? "players" : which;
+  const cols = COLS[key];
+  return {headers:cols.map(c=>c[0]), rows:state[key].filter(r=>which==="ledger"||r.name).map(r=>cols.map(c=>r[c[0]]??""))};
+}
+function serialize(which,fmt){
+  const {headers,rows} = tableOf(which);
+  const cell = v => String(v??"").replace(/\r?\n/g," ").trim();
+  if(fmt==="csv") return [headers,...rows].map(r=>r.map(csvCell).join(",")).join("\r\n")+"\r\n";
+  if(fmt==="tsv") return [headers,...rows].map(r=>r.map(v=>cell(v).replace(/\t/g," ")).join("\t")).join("\r\n")+"\r\n";
+  if(fmt==="json"){
+    if(which==="profile") return JSON.stringify(Object.fromEntries(rows),null,2);
+    return JSON.stringify(rows.map(r=>Object.fromEntries(r.map((v,i)=>[headers[i],v]))),null,2);
+  }
+  if(fmt==="md"){
+    if(which==="profile") return "# Client Profile\n\n" + rows.map(([k,v])=>`**${k}:** ${cell(v)}`).join("\n\n") + "\n";
+    const esc2 = v => cell(v).replace(/\|/g,"\\|");
+    return `# ${BASE[which]}\n\n| ${headers.join(" | ")} |\n|${headers.map(()=>"---").join("|")}|\n` + rows.map(r=>`| ${r.map(esc2).join(" | ")} |`).join("\n") + "\n";
+  }
+  // txt: one block per record, plain key: value lines
+  if(which==="profile") return rows.map(([k,v])=>`${k}: ${cell(v)}`).join("\n") + "\n";
+  return rows.map((r,n)=>`Record ${n+1}\n` + r.map((v,i)=>`  ${headers[i]}: ${cell(v)}`).join("\n")).join("\n\n") + "\n";
+}
+function fileFor(which,fmt){
+  if(fmt==="pipeline"){ const f = FILES[which]; return {name:f[0],text:f[1](),type:f[2]}; }
+  return {name:`${BASE[which]}.${FMT[fmt].ext}`, text:serialize(which,fmt), type:FMT[fmt].type};
+}
+function currentFmt(){ return $("#fmt").value; }
 function doExport(which){
+  const fmt = currentFmt();
+  if(which==="json"){ const f = FILES.json; download(f[0],f[1](),f[2]); setStatus("Saved intake-session.json"); return; }
   const list = which==="all" ? ["profile","roster","ai","ledger"] : [which];
-  list.forEach((k,n) => setTimeout(()=>download(FILES[k][0],FILES[k][1](),FILES[k][2]), n*250));
-  setStatus("Exported " + list.map(k=>FILES[k][0]).join(", "));
+  const made = list.map(k=>fileFor(k,fmt));
+  made.forEach((f,n) => setTimeout(()=>download(f.name,f.text,f.type), n*250));
+  setStatus("Exported " + made.map(f=>f.name).join(", "));
+}
+async function doCopy(which){
+  const f = fileFor(which,currentFmt());
+  try{ await navigator.clipboard.writeText(f.text); setStatus("Copied " + f.name + " to clipboard"); }
+  catch(e){ setStatus("Clipboard blocked by the browser; use Export."); }
 }
 
 // ---- events
@@ -216,6 +265,7 @@ document.addEventListener("click", e => {
   if(b.dataset.add){ state[b.dataset.add].push(newRow(b.dataset.add)); renderTable(b.dataset.add); save(); }
   else if(b.dataset.del){ const [t,i] = b.dataset.del.split(":"); state[t].splice(+i,1); renderTable(t); save(); }
   else if(b.dataset.export){ doExport(b.dataset.export); }
+  else if(b.dataset.copy){ doCopy(b.dataset.copy); }
   else if(b.id==="loadBtn"){ $("#loadFile").click(); }
   else if(b.id==="clearBtn"){ if(confirm("Clear every field in this form? Export first if you need a copy.")){ state = blank(); renderAll(); save(); } }
 });
@@ -226,7 +276,11 @@ $("#loadFile").addEventListener("change", e => {
   r.readAsText(f); e.target.value = "";
 });
 
-load(); renderAll();
+function updateLabels(){ const fmt=currentFmt(); document.querySelectorAll("[data-label]").forEach(b=>{ b.textContent = "Export " + fileFor(b.dataset.label,fmt).name; }); }
+$("#fmt").addEventListener("change", updateLabels);
+try{ const f=localStorage.getItem(KEY+"-fmt"); if(f) $("#fmt").value=f; }catch(e){}
+$("#fmt").addEventListener("change", ()=>{ try{ localStorage.setItem(KEY+"-fmt",$("#fmt").value); }catch(e){} });
+load(); renderAll(); updateLabels();
 </script>
 </body>
 </html>

@@ -77,6 +77,19 @@ It covers the client profile, the players, AI uses, and the link ledger, with th
 | AI uses | `ai-uses.md` | `stages/02_players-and-ai/output/` |
 | Link ledger | `ledger.csv` | `stages/03_link-ledger/output/` |
 
+**Formats.** The Format menu at the bottom switches every export, and each section also has a Copy button for the clipboard:
+
+| Format | Use it for |
+|---|---|
+| Pipeline (default) | the exact `.md` and `.csv` files the stages read |
+| Markdown | tables for docs, wikis, GitHub, Obsidian |
+| Plain text | email, chat, notes; one `key: value` block per record |
+| CSV | Excel, Google Sheets, databases |
+| TSV | paste straight into a spreadsheet |
+| JSON | scripts, APIs, other tools |
+
+Only Pipeline output drops into the stage folders unchanged. The other formats are copies of the same data for sharing or analysis.
+
 Rows start labeled `Gap`; change a row to Established or Author's construction only when the record supports it. Progress autosaves in the browser, and **Save session** writes a `.json` you can reload later or hand to a colleague. Exported drafts still go through the human gate: the agent or auditor reads them before the next stage runs.
 
 ## Using It With Different Agents
