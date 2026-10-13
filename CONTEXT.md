@@ -13,6 +13,8 @@ The flow in one line: fix the boundary, list the players, write the links, trace
 | `07_test-moves` | test shocks and moves | 05 and 06 outputs | `output/tests.md` | owner picks scenarios |
 | `08_report` | report and set triggers | all outputs | `output/report.md` | owner signs off |
 
+Optional intake: an auditor can fill `tools/intake-form.html` first and save its exports to `intake/`. Stages 02 and 03 read those as Working drafts, verify them, and write `output/`. Nothing in `intake/` counts as a stage output.
+
 Factory (stable, every run): `_shared/` and each stage's `references/`
 Product (new each run): each stage's `output/`
 

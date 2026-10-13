@@ -40,11 +40,11 @@ td textarea{min-height:34px}
 <body>
 <main>
   <h1>Supply Web Audit Intake</h1>
-  <p class="sub">Fills the same fields the pipeline reads. Everything stays in this browser tab; nothing is uploaded. Pick a format at the bottom: Pipeline writes the exact files the stages read (save each into the folder shown). Markdown, plain text, CSV, TSV and JSON are for sharing, spreadsheets, or other tools.</p>
+  <p class="sub">Fills the same fields the pipeline reads. Everything stays in this browser tab; nothing is uploaded. Pick a format at the bottom: Pipeline writes the exact files the stages read. Save them all into the <code>intake/</code> folder; the stages pick them up from there. Markdown, plain text, CSV, TSV and JSON are for sharing, spreadsheets, or other tools.</p>
 
   <section class="card" id="profile">
     <h2>1. Client profile</h2>
-    <p class="hint">From <code>setup/questionnaire.md</code>. Exports to <code>_shared/client-profile.md</code>.</p>
+    <p class="hint">From <code>setup/questionnaire.md</code>. Exports <code>client-profile.md</code>.</p>
     <label for="p_client">Client name and what they sell or do</label>
     <textarea id="p_client" data-p="client"></textarea>
     <label for="p_decision">Decision this audit supports</label>
@@ -68,28 +68,28 @@ td textarea{min-height:34px}
     </select>
     <label for="p_readers">Who else reads the report, and what must they find without asking?</label>
     <textarea id="p_readers" data-p="readers"></textarea>
-    <div class="row"><button class="primary" data-export="profile" data-label="profile">Export</button><button data-copy="profile">Copy</button><span class="hint" style="margin:0">save to <code>_shared/</code></span></div>
+    <div class="row"><button class="primary" data-export="profile" data-label="profile">Export</button><button data-copy="profile">Copy</button><span class="hint" style="margin:0">save to <code>intake/</code></span></div>
   </section>
 
   <section class="card">
     <h2>2. Players</h2>
-    <p class="hint">Admission test: add a player only if removing it changes another player's payoffs or options. Exports to <code>roster.md</code>.</p>
+    <p class="hint">Admission test: add a player only if removing it changes another player's payoffs or options. Exports <code>roster.md</code>.</p>
     <div class="tablewrap"><table id="t_players"></table></div>
-    <div class="row"><button data-add="players">+ Add player</button><button class="primary" data-export="roster" data-label="roster">Export</button><button data-copy="roster">Copy</button><span class="hint" style="margin:0">save to <code>stages/02_players-and-ai/output/</code></span></div>
+    <div class="row"><button data-add="players">+ Add player</button><button class="primary" data-export="roster" data-label="roster">Export</button><button data-copy="roster">Copy</button><span class="hint" style="margin:0">save to <code>intake/</code></span></div>
   </section>
 
   <section class="card">
     <h2>3. AI uses</h2>
-    <p class="hint">Every AI use in the web, the client's and the vendors'. Exports to <code>ai-uses.md</code>.</p>
+    <p class="hint">Every AI use in the web, the client's and the vendors'. Exports <code>ai-uses.md</code>.</p>
     <div class="tablewrap"><table id="t_ai"></table></div>
-    <div class="row"><button data-add="ai">+ Add AI use</button><button class="primary" data-export="ai" data-label="ai">Export</button><button data-copy="ai">Copy</button><span class="hint" style="margin:0">save to <code>stages/02_players-and-ai/output/</code></span></div>
+    <div class="row"><button data-add="ai">+ Add AI use</button><button class="primary" data-export="ai" data-label="ai">Export</button><button data-copy="ai">Copy</button><span class="hint" style="margin:0">save to <code>intake/</code></span></div>
   </section>
 
   <section class="card">
     <h2>4. Link ledger</h2>
     <p class="hint">One row per link. Leverage sits with whoever can leave more cheaply. Tier is set per link, not per player. Exports <code>ledger.csv</code> with the exact header in <code>_templates/ledger-header.csv</code>.</p>
     <div class="tablewrap"><table id="t_ledger"></table></div>
-    <div class="row"><button data-add="ledger">+ Add link</button><button class="primary" data-export="ledger" data-label="ledger">Export</button><button data-copy="ledger">Copy</button><span class="hint" style="margin:0">save to <code>stages/03_link-ledger/output/</code></span></div>
+    <div class="row"><button data-add="ledger">+ Add link</button><button class="primary" data-export="ledger" data-label="ledger">Export</button><button data-copy="ledger">Copy</button><span class="hint" style="margin:0">save to <code>intake/</code></span></div>
     <p class="note">ledger.csv is gitignored on purpose. Do not commit client data.</p>
   </section>
 </main>

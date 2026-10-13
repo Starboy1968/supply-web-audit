@@ -5,6 +5,7 @@ One job: write every link between players as one row, from records.
 ## Inputs
 - Working (this run): ../02_players-and-ai/output/roster.md
 - Working (this run): client contracts, invoices, payment history
+- Working (this run, if present): ../../intake/ledger.csv (auditor draft from tools/intake-form.html)
 - Reference (every run): references/ledger-fields.md
 - Reference (every run): ../../_templates/ledger-header.csv
 - Reference (every run): ../../_shared/evidence-labels.md
@@ -12,6 +13,7 @@ One job: write every link between players as one row, from records.
 Do NOT load: AI uses, behavior scoring, other stages' references.
 
 ## Process
+0. If intake/ledger.csv exists, start from its rows. Keep their evidence labels; check each against records and add the links it missed.
 1. For each pair that exchanges anything, add a row. Include unwritten links (favors, shared owners, shared staff).
 2. Fill every field from records. Blank means Gap, never a guess.
 3. Label each row's evidence.

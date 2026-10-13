@@ -6,6 +6,8 @@
 *.pdf
 client-records/*
 !client-records/.gitkeep
+intake/*
+!intake/.gitkeep
 bank-statements/
 audit-logs/
 incident-reports/

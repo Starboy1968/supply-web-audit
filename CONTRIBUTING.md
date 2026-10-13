@@ -19,7 +19,7 @@ This repo is an ICM workspace: folders carry sequencing, hierarchy carries conte
 
 ## Keeping the intake form in sync
 
-`tools/intake-form.html` mirrors `setup/questionnaire.md`, `_templates/`, and `stages/03_link-ledger/references/ledger-fields.md`. If you change a ledger field, a questionnaire question, or a template, change the matching column or field in the form's `COLS` table and export functions in the same PR. The CSV header it exports must equal `_templates/ledger-header.csv`.
+`tools/intake-form.html` mirrors `setup/questionnaire.md`, `_templates/`, and `stages/03_link-ledger/references/ledger-fields.md`. If you change a ledger field, a questionnaire question, or a template, change the matching column or field in the form's `COLS` table and export functions in the same PR. Exports are saved to `intake/` and read by stages 02 and 03 (see their Inputs). The CSV header it exports must equal `_templates/ledger-header.csv`.
 
 ## Adding a layer, tier, or evidence rule
 

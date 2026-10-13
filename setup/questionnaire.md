@@ -1,5 +1,6 @@
 # Setup questionnaire
 Ask the owner these once per client copy. Write the answers to `_shared/client-profile.md`.
+Shortcut: if the auditor already filled `tools/intake-form.html` and saved `intake/client-profile.md`, read it back to the owner, confirm each answer, then copy it to `_shared/client-profile.md`.
 
 1. Client name and what they sell or do.
 2. The decision this audit supports (and the date it is due).

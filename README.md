@@ -70,12 +70,16 @@ Each stage reads the output of the stages before it. The hexagons are the human 
 
 It covers the client profile, the players, AI uses, and the link ledger, with the same fields the pipeline reads. Export buttons write files in the exact formats the stages expect:
 
-| Section | Exports | Save to |
+Save every export into `intake/` (gitignored, since it holds client data). The pipeline picks each one up from there:
+
+| Section | Exports | Picked up by |
 |---|---|---|
-| Client profile | `client-profile.md` | `_shared/` |
-| Players | `roster.md` | `stages/02_players-and-ai/output/` |
-| AI uses | `ai-uses.md` | `stages/02_players-and-ai/output/` |
-| Link ledger | `ledger.csv` | `stages/03_link-ledger/output/` |
+| Client profile | `client-profile.md` | setup, which confirms it with the owner and copies it to `_shared/` |
+| Players | `roster.md` | stage `02_players-and-ai` |
+| AI uses | `ai-uses.md` | stage `02_players-and-ai` |
+| Link ledger | `ledger.csv` | stage `03_link-ledger` |
+
+The stages treat intake files as drafts: they keep your evidence labels, verify each row against records, and write the confirmed result to `output/`. The human gate still applies.
 
 **Formats.** The Format menu at the bottom switches every export, and each section also has a Copy button for the clipboard:
 
@@ -88,7 +92,7 @@ It covers the client profile, the players, AI uses, and the link ledger, with th
 | TSV | paste straight into a spreadsheet |
 | JSON | scripts, APIs, other tools |
 
-Only Pipeline output drops into the stage folders unchanged. The other formats are copies of the same data for sharing or analysis.
+Only Pipeline output is read by the stages. The other formats are copies of the same data for sharing or analysis.
 
 Rows start labeled `Gap`; change a row to Established or Author's construction only when the record supports it. Progress autosaves in the browser, and **Save session** writes a `.json` you can reload later or hand to a colleague. Exported drafts still go through the human gate: the agent or auditor reads them before the next stage runs.
 
@@ -191,6 +195,7 @@ stages 01 to 03 on Apex so I can see the shape of each output.
 │   └── evidence-labels.md    # How to label claims (Established/Author/Gap)
 ├── _templates/               # Blank starters (copy, never edit directly)
 ├── tools/intake-form.html    # Offline form that exports profile, roster, AI uses, ledger
+├── intake/                   # Drop the form's exports here (contents gitignored)
 ├── docs/                     # Full framework reference + worked example
 ├── examples/apex/            # Filled demo profile and scope (fictional client)
 └── client-records/           # Drop client files here (contents gitignored)
