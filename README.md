@@ -62,6 +62,56 @@ Each stage reads the output of the stages before it. The hexagons are the human 
 
 **Key principle:** Nothing moves to the next stage until a person has read and approved the output of the last one.
 
+## Usage Examples
+
+Open the folder in any file-reading agent (Claude Code, Codex, Gemini CLI) and paste the prompt. The agent starts at `AGENTS.md` and loads only what the current stage lists.
+
+**1. Configure a new client**
+```
+Read AGENTS.md. New client copy. Run setup/questionnaire.md with me,
+one question at a time, then write my answers to _shared/client-profile.md.
+```
+
+**2. Run a stage**
+```
+Run stage 01_scope. Client brief is in client-records/brief.txt.
+Stop when scope.md is written so I can read it.
+```
+
+**3. Approve and advance**
+```
+Scope confirmed. Run stage 02_players-and-ai.
+```
+
+**4. Fix an output before moving on**
+```
+Narrow-points.md missed the payment processor. Add it, label the claim
+Established or Gap, and wait for me to re-read before stage 06.
+```
+
+**5. Check status**
+```
+What stages are complete? Scan stages/*/output/ and tell me what is next.
+```
+
+**6. Pressure-test a finding**
+```
+In behavior.md, give the best alternative explanation for each score
+and flag any score the records alone don't support.
+```
+
+**7. Re-audit after a trigger fires**
+```
+Trigger fired: our top lender cut a credit line. Open stage 08's trigger
+list, re-run only the stages that trigger touches, and diff against the last report.
+```
+
+**8. Try it without client data**
+```
+Read examples/apex/client-profile.md and docs/AUDIT_EXAMPLE.md, then run
+stages 01 to 03 on Apex so I can see the shape of each output.
+```
+
 ## Directory Structure
 
 ```
