@@ -6,6 +6,27 @@ It is built as an ICM workspace (Interpretable Context Methodology): folders car
 
 **Input:** a client brief and their records. **Output:** one signed risk report and a re-audit trigger list. The worked example is cyber risk; the layers are domain-neutral.
 
+## In Plain English
+
+**The problem.** Most businesses know their suppliers and customers. Few know the web behind them: who their supplier depends on, who lends to everyone in the chain, and which single company, bank, or tool would stall the whole thing if it failed. Those hidden dependencies are where surprises come from.
+
+**What this does.** It walks you through mapping that web step by step, then shows where it is thin, how the people in it tend to behave under pressure, and what happens if one piece breaks. You finish with a written report and a short list of events that mean "audit this again."
+
+**Who it's for**
+- **Owners and operators of small and mid-size businesses** who want to see their real exposure before a lender, buyer, or crisis shows it to them.
+- **Auditors, risk consultants, and advisors** who need a repeatable process they can hand to a client and defend.
+- **Boards, lenders, and acquirers' counsel** who need to know what was checked, what is proven, and what is still unknown.
+- **Anyone using an AI agent for analysis** who wants it to follow a method and show its evidence instead of improvising.
+
+**Why it's valuable**
+- **It shows the whole web, not just your direct suppliers.** The risk usually sits one or two steps away.
+- **It separates what is known from what is guessed.** Every claim is labeled Established, Author's construction, or Gap, so readers see how far to trust it.
+- **A person checks every step.** Nothing moves forward until someone has read and confirmed the last output, so an AI cannot quietly run ahead.
+- **It is repeatable.** Same steps, same files, same report shape every time. The triggers tell you when to re-run it instead of leaving it on a shelf.
+- **It is cheap to adopt.** No software to install, no subscription. A form for collecting information and a folder of plain files.
+
+**What it is not.** It is not legal, financial, or insurance advice, and it does not predict the future. It is a structured way to find and document dependencies and weak points so people can decide what to do about them.
+
 ## What It Does
 
 Audits across seven layers (money, physical, rules, narrative, technology, behavior, ecology). The cyber-risk example leans on four:
