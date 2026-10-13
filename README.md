@@ -25,6 +25,30 @@ Total time: 2–4 weeks per audit (depends on data availability).
 
 ## How It Works
 
+```mermaid
+flowchart TD
+    P[client-profile.md<br/>from setup questionnaire] --> S1
+    S1[01 scope<br/>fix the boundary] --> H1{{person reads}}
+    H1 --> S2[02 players and AI<br/>roster, AI uses]
+    S2 --> H2{{person reads}}
+    H2 --> S3[03 link ledger<br/>one row per link]
+    S3 --> H3{{person reads}}
+    H3 --> S4[04 money map<br/>credit and buffers]
+    H3 --> S6[06 behavior<br/>read records, not claims]
+    S4 --> H4{{person reads}}
+    H4 --> S5[05 narrow points<br/>where the web is thin]
+    S5 --> H5{{person reads}}
+    S6 --> H6{{person reads}}
+    H5 --> S7[07 test moves<br/>shocks and scenarios]
+    H6 --> S7
+    S7 --> H7{{person reads}}
+    H7 --> S8[08 report<br/>signed report + re-audit triggers]
+    S8 --> H8{{owner signs off}}
+    H8 -. triggers fire .-> S1
+```
+
+Each stage reads the output of the stages before it. The hexagons are the human gates. The dotted line is the infinite game: when a re-audit trigger fires, the loop starts again.
+
 ```
 01_scope          → Fix the boundary (what's in, what's out)
 02_players-and-ai → Roster players, map AI uses
