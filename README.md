@@ -1,12 +1,14 @@
 # Supply Web Audit Framework
 
-A structured methodology for auditing risk across a supply web (not just a chain). Treats supply systems as infinite games where players enter, exit, and get recycled. Built on game theory principles and tested on cyber risk, financial risk, and operational resilience.
+A file-based workspace that an AI agent (or a person) walks to audit one client's supply web: the players, the links between them, where the money flows, and where the web is thin. It treats a supply system as an infinite game, where players enter, exit, and get recycled, so the audit ends with a list of triggers that say when to run it again.
 
-**Output:** One signed risk report + re-audit trigger list.
+It is built as an ICM workspace (Interpretable Context Methodology): folders carry the sequence, hierarchy carries the context, and files carry the state. There is no code to install. Any agent that can read and write files can run it, and a person can run it by hand.
+
+**Input:** a client brief and their records. **Output:** one signed risk report and a re-audit trigger list. The worked example is cyber risk; the layers are domain-neutral.
 
 ## What It Does
 
-Maps a client's supply web across four core layers:
+Audits across seven layers (money, physical, rules, narrative, technology, behavior, ecology). The cyber-risk example leans on four:
 - **Technology** — infrastructure, integrations, data flows
 - **Rules** — regulatory exposure, compliance obligations
 - **Behavior** — access practices, incident response, key person dependencies
@@ -61,6 +63,27 @@ Each stage reads the output of the stages before it. The hexagons are the human 
 ```
 
 **Key principle:** Nothing moves to the next stage until a person has read and approved the output of the last one.
+
+## Using It With Different Agents
+
+Every agent starts from one entry file, `AGENTS.md`. `CLAUDE.md` and `GEMINI.md` are one-line pointers to it, so each tool's native entry file lands in the same place.
+
+| Tool | How to start |
+|---|---|
+| Claude Code | `cd` into the folder, run `claude`. It loads `CLAUDE.md`, which points to `AGENTS.md`. |
+| Codex CLI | `cd` into the folder, run `codex`. It reads `AGENTS.md` directly. |
+| Gemini CLI | `cd` into the folder, run `gemini`. It loads `GEMINI.md`, which points to `AGENTS.md`. |
+| Cursor, Windsurf, Copilot agent mode, Cline | Open the folder as the workspace. If the tool does not pick up `AGENTS.md` on its own, start with: `Read AGENTS.md and follow it.` |
+| Aider | `aider --read AGENTS.md --read CONTEXT.md`, then add each stage's files as you reach it. |
+| Chat app with file upload (Claude.ai, ChatGPT) | Upload the folder or zip. Say: `Read AGENTS.md and follow it.` The chat cannot save files, so copy each stage's output into `stages/NN_name/output/` yourself before the next stage. |
+| Chat app, no upload | Paste `AGENTS.md`, `CONTEXT.md`, then the current stage's `CONTEXT.md` and the files it lists. Paste each output back in as input to the next stage. |
+| No agent | Open each stage's `CONTEXT.md` and follow its Process. The Inputs list says what to read, Outputs says what to write. |
+
+Notes that apply to all of them:
+- Tools that can read and write files carry state for you: a stage is complete when its `output/` holds an artifact, so you can close the session and resume with `What stages are complete?`
+- Sandboxed or read-only agents can draft outputs but will not save them. Paste the draft into the right `output/` folder yourself.
+- Keep client files in `client-records/`. Do not paste them into an agent whose data policy you have not checked.
+- The agent's job is the stage, not the pipeline. If one tries to run several stages in a row, remind it of the rule: nothing advances until you have read the last output.
 
 ## Usage Examples
 
