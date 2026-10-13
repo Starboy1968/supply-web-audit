@@ -25,6 +25,8 @@ It is built as an ICM workspace (Interpretable Context Methodology): folders car
 - **It is repeatable.** Same steps, same files, same report shape every time. The triggers tell you when to re-run it instead of leaving it on a shelf.
 - **It is cheap to adopt.** No software to install, no subscription. A form for collecting information and a folder of plain files.
 
+**Why it was built.** Read the one-page memo: [docs/WHY.md](docs/WHY.md).
+
 **What it is not.** It is not legal, financial, or insurance advice, and it does not predict the future. It is a structured way to find and document dependencies and weak points so people can decide what to do about them.
 
 ## What It Does
